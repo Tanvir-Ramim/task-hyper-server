@@ -25,10 +25,21 @@ async function run() {
     //   await client.connect();
          const taskCollection=client.db('TaskTracker').collection('AllTask')
 
-         app.post('addTask', async(req,res)=>{
+         app.post('/addTask', async(req,res)=>{
              try{
                  const taskInfo=req.body
                  const result=await taskCollection.insertOne(taskInfo)
+                 return res.send(result)
+             }
+             catch{
+                return res.send({error:true})
+             }
+         })
+
+         app.get('/allTask',async(req,res)=>{
+             try{
+                 const result= await taskCollection.find().toArray()
+                 return res.send(result)
              }
              catch{
                 return res.send({error:true})

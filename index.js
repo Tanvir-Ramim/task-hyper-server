@@ -2,7 +2,7 @@ const express = require('express')
 const app =express();
 const cors = require('cors');
 require('dotenv').config()
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const port=process.env.PORT || 5000
 
 // middleware
@@ -39,13 +39,26 @@ async function run() {
          app.get('/allTask',async(req,res)=>{
              try{
                  const result= await taskCollection.find().toArray()
+                 
                  return res.send(result)
              }
              catch{
                 return res.send({error:true})
              }
          })
+         
+         app.delete('/deleteTask/:id',async(req,res)=>{
+          try{
+             const id=req.params.id
+             const query={_id: new ObjectId(id)}
+             const result= await taskCollection.deleteOne(query)
 
+             res.send(result)
+        }
+        catch{
+           return res.send({error:true})
+        }
+         })
 
 
 

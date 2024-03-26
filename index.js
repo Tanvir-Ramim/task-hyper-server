@@ -60,6 +60,31 @@ async function run() {
         }
          })
 
+         app.put('/updateTask',async(req,res)=>{
+             try
+             {
+              const taskInfo=req.body
+           
+              const {newPriority,endDate,newStatus,id}=taskInfo || {}
+              const query={_id : new ObjectId(taskInfo?.newId)}
+           
+              const updateInfo ={
+                  $set:{
+                     priority :newPriority ,
+                     taskStatus : newStatus,
+                     endDate : endDate
+                  }
+              }
+              const result =await taskCollection.updateOne(query,updateInfo)
+              return res.send(result)
+             }
+             catch{
+              return res.send({error:true})
+             }
+         })
+
+        
+
 
 
 

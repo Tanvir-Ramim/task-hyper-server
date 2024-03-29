@@ -38,9 +38,14 @@ async function run() {
 
          app.get('/allTask',async(req,res)=>{
              try{
-                 const result= await taskCollection.find().toArray()
-                 
-                 return res.send(result)
+                  const {email}=req.query
+                  if(email){
+                    const query= {userEmail : email}
+                    const result= await taskCollection.find(query).toArray()
+                    return res.send(result)
+                  }
+              
+                
              }
              catch{
                 return res.send({error:true})
@@ -52,6 +57,7 @@ async function run() {
              const id=req.params.id
              const query={_id: new ObjectId(id)}
              const result= await taskCollection.deleteOne(query)
+             
 
              res.send(result)
         }
@@ -65,8 +71,8 @@ async function run() {
              {
               const taskInfo=req.body
            
-              const {newPriority,endDate,newStatus,id}=taskInfo || {}
-              const query={_id : new ObjectId(taskInfo?.newId)}
+              const {newPriority,endDate,newStatus,newId}=taskInfo || {}
+              const query={_id : new ObjectId(newId)}
            
               const updateInfo ={
                   $set:{
